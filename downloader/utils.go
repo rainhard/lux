@@ -37,7 +37,7 @@ func printHeader(data *extractors.Data) {
 	fmt.Println(data.Type)
 }
 
-func printStream(stream *extractors.Stream) {
+func printStream(stream *extractors.Stream, debug bool) {
 	blue.Println(fmt.Sprintf("     [%s]  -------------------", stream.ID)) // nolint
 	if stream.Quality != "" {
 		cyan.Printf("     Quality:         ") // nolint
@@ -45,11 +45,21 @@ func printStream(stream *extractors.Stream) {
 	}
 	cyan.Printf("     Size:            ") // nolint
 	fmt.Printf("%.2f MiB (%d Bytes)\n", float64(stream.Size)/(1024*1024), stream.Size)
+	if debug {
+		for i, part := range stream.Parts {
+			cyan.Printf("     #%d:\n", i) // nolint
+			cyan.Printf("         Ext:  %s\n", part.Ext) // nolint
+			cyan.Printf("         Size: ") // nolint
+			fmt.Printf("%.2f MiB (%d Bytes)\n", float64(part.Size)/(1024*1024), part.Size)
+			cyan.Printf("         URL:  %s\n", part.URL)
+		}
+	}
+
 	cyan.Printf("     # download with: ") // nolint
 	fmt.Printf("lux -f %s ...\n\n", stream.ID)
 }
 
-func printInfo(data *extractors.Data, sortedStreams []*extractors.Stream) {
+func printInfo(data *extractors.Data, sortedStreams []*extractors.Stream, debug bool) {
 	printHeader(data)
 	if len(data.Captions) > 0 {
 		cyan.Printf(" Captions:  ") // nolint
@@ -71,7 +81,7 @@ func printInfo(data *extractors.Data, sortedStreams []*extractors.Stream) {
 	cyan.Printf(" Streams:   ") // nolint
 	fmt.Println("# All available quality")
 	for _, stream := range sortedStreams {
-		printStream(stream)
+		printStream(stream, debug)
 	}
 }
 
@@ -80,5 +90,5 @@ func printStreamInfo(data *extractors.Data, stream *extractors.Stream) {
 
 	cyan.Printf(" Stream:   ") // nolint
 	fmt.Println()
-	printStream(stream)
+	printStream(stream, false)
 }

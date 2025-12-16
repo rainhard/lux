@@ -46,6 +46,8 @@ type Options struct {
 	Aria2Token  string
 	Aria2Method string
 	Aria2Addr   string
+
+	Debug bool
 }
 
 // Downloader is the default downloader.
@@ -556,7 +558,7 @@ func (downloader *Downloader) Download(data *extractors.Data) error {
 
 	sortedStreams := genSortedStreams(data.Streams)
 	if downloader.option.InfoOnly {
-		printInfo(data, sortedStreams)
+		printInfo(data, sortedStreams, downloader.option.Debug)
 		return nil
 	}
 

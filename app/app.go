@@ -325,6 +325,7 @@ func download(c *cli.Context, videoURL string) error {
 		Aria2Token:     c.String("aria2-token"),
 		Aria2Method:    c.String("aria2-method"),
 		Aria2Addr:      c.String("aria2-addr"),
+		Debug:          c.Bool("debug"),
 	})
 	errors := make([]error, 0)
 	for _, item := range data {
